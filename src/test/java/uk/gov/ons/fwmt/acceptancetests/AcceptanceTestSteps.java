@@ -8,9 +8,4 @@ public class AcceptanceTestSteps {
   public void passTest() throws Exception {
     assert(true);
   }
-
-  @Given("^fail$")
-  public void failTest() throws Exception {
-    assert(false);
-  }
 }
