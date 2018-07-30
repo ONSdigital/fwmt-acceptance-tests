@@ -38,3 +38,7 @@ services:
      - service.resource.username=user
      - service.resource.password=password
      - service.resource.baseUrl=http://${RESOURCE_HOST}:9093/resources
+networks:
+  default:
+    external:
+      name: rmdockerdev_default
