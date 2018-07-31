@@ -2,6 +2,9 @@ language: java
 jdk: oraclejdk8
 services:
  - docker
+ - postgresql
+addons:
+  postgresql: '9.6'
 before_install:
   - docker-compose up -d
 script:
