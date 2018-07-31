@@ -19,8 +19,8 @@ services:
     ports:
       - "${RESOURCE_PORT}:9093"
     environment:
-      - spring.datasource.url="jdbc:postgresql://${POSTGRES_HOST}:${POSTGRES_PORT}/${POSTGRES_HOST}?currentSchema=gateway"
-      - liquibase.url="jdbc:postgresql://${POSTGRES_HOST}:${POSTGRES_PORT}/${POSTGRES_HOST}?currentSchema=gateway"
+      - spring.datasource.url=jdbc:postgresql://${POSTGRES_HOST}:${POSTGRES_PORT}/${POSTGRES_HOST}?currentSchema=gateway
+      - liquibase.url=jdbc:postgresql://${POSTGRES_HOST}:${POSTGRES_PORT}/${POSTGRES_HOST}?currentSchema=gateway
     networks:
       - internal
   staff:
