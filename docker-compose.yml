@@ -10,7 +10,7 @@ services:
     environment:
       - service.resource.username=user
       - service.resource.password=password
-      - service.resource.baseUrl=http://${RESOURCE_HOST}:9093/resources
+      - service.resource.baseUrl=http://${RESOURCE_HOST}:${RESOURCE_PORT}/resources
     networks:
       - internal
   resource:
@@ -28,6 +28,10 @@ services:
     image: sdcplatform/fwmtstaffsvc
     ports:
       - "${STAFF_PORT}:9092"
+    environment:
+      - service.resource.username=user
+      - service.resource.password=password
+      - service.resource.baseUrl=http://${RESOURCE_HOST}:${RESOURCE_PORT}/resources
     links:
       - resource
     networks:
