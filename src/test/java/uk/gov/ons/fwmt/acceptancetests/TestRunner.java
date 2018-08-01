@@ -6,7 +6,7 @@ import org.junit.runner.RunWith;
 
 @RunWith(Cucumber.class)
 @CucumberOptions(plugin = {"pretty"},
-  features = {"src/test/resources/acceptancetests/test.feature"},
+  features = {"src/test/resources/acceptancetests/jobService.feature"},
   glue = {"uk.gov.ons.fwmt.acceptancetests"})
 public class TestRunner {
 }
