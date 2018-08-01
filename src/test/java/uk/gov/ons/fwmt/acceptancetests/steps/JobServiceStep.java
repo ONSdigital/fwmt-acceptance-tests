@@ -5,19 +5,48 @@ import cucumber.api.java.en.And;
 import cucumber.api.java.en.Given;
 import cucumber.api.java.en.Then;
 import cucumber.api.java.en.When;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.core.io.FileSystemResource;
+import org.springframework.core.io.Resource;
+import org.springframework.http.HttpEntity;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpMethod;
+import org.springframework.http.MediaType;
 import org.springframework.stereotype.Component;
+import org.springframework.util.LinkedMultiValueMap;
+import org.springframework.util.MultiValueMap;
+import org.springframework.web.client.HttpClientErrorException;
+import org.springframework.web.client.RestTemplate;
 import uk.gov.ons.fwmt.acceptancetests.clients.JobServiceClient;
 
+import java.io.File;
+
 @Component
+@Slf4j
 public class JobServiceStep {
 
-
-  @Autowired JobServiceClient jobServiceClient;
+  private RestTemplate restTemplate;
+  private @Value("${service.resource.baseUrl}") String baseUrl;
+  private @Value("${service.resource.operation.jobs.create.path}") String storeCSVUrl;
 
   @Given("^I have submitted a sample CSV of type LFS named \"([^\"]*)\"$")
-  public void iHaveASampleCSVOfType(String arg0) throws Throwable {
-    jobServiceClient.sendCSV(arg0);
+  public void iHaveASampleCSVOfType(String fileName) throws Throwable {
+    try {
+
+      File file = new File(String.valueOf("src/test/resources/data/"+fileName));
+      Resource fileConvert = new FileSystemResource(file);
+      MultiValueMap<String,Object> bodyMap = new LinkedMultiValueMap<>();
+      bodyMap.add("file", fileConvert);
+      HttpHeaders headers = new HttpHeaders();
+      headers.setContentType(MediaType.MULTIPART_FORM_DATA);
+
+      final HttpEntity<MultiValueMap<String, Object>> request = new HttpEntity<>(bodyMap, headers);
+      restTemplate.exchange(storeCSVUrl, HttpMethod.POST, request, String.class);
+    } catch (org.springframework.web.client.HttpClientErrorException HttpClientErrorException) {
+      log.error("An error occurred while communicating with the resource service", HttpClientErrorException);
+    }
   }
 
   @When("^the CSV is validated$")

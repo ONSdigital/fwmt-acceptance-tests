@@ -55,8 +55,8 @@ service:
     jobs:
       operation:
         find:
-          jobUrl: "http://localhost:9095/jobs/{authNo}"
+          jobUrl: "http://localhost:9091/jobs/{authNo}"
         create:
-          url: "http://localhost:9095/jobs/"
+          url: "http://localhost:9091/jobs/"
         update:
-          url: "http://localhost:9095/jobs/"
+          url: "http://localhost:9091/jobs/"

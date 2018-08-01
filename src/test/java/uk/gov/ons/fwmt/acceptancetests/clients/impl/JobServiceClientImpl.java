@@ -18,6 +18,7 @@ import uk.gov.ons.fwmt.acceptancetests.clients.JobServiceClient;
 
 
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.InputStream;
 import java.net.URL;
 
@@ -41,10 +42,7 @@ public class JobServiceClientImpl implements JobServiceClient{
   public void sendCSV(String sendCSVName){
     try {
 
-      URL url = this.getClass().getResource("/SomeTextFile.txt");
-
-      File file = new File(String.valueOf(url));
-
+      File file = new File(String.valueOf("src/test/resources/data/"+sendCSVName));
       Resource fileConvert = new FileSystemResource(file);
       MultiValueMap<String,Object> bodyMap = new LinkedMultiValueMap<>();
       bodyMap.add("file", fileConvert);
