@@ -7,7 +7,6 @@ import org.springframework.web.client.HttpClientErrorException;
 import org.springframework.web.client.ResourceAccessException;
 import org.springframework.web.client.RestTemplate;
 
-
 import java.util.Optional;
 
 @Slf4j
@@ -20,7 +19,7 @@ public class ResourceRESTHelper {
         return Optional.ofNullable(responseEntity.getBody());
       }
       // any success that doesn't have a 2xx is an unexpected error
-      throw new  RuntimeException();
+      throw new RuntimeException();
     } catch (HttpClientErrorException httpException) {
       if (httpException.getStatusCode() == HttpStatus.NOT_FOUND) {
         // a 404, which occurs when we can't find the entity

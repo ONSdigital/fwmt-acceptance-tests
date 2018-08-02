@@ -6,6 +6,6 @@ public class AcceptanceTestSteps {
 
   @Given("^pass$")
   public void passTest() throws Exception {
-    assert(true);
+    assert (true);
   }
 }
