@@ -28,13 +28,13 @@ import java.io.File;
 public class JobServiceStep {
 
   private RestTemplate restTemplate;
-  private @Value("${service.resource.baseUrl}") String baseUrl;
-  private @Value("${service.resource.operation.jobs.create.path}") String storeCSVUrl;
+  private String baseUrl;
+  private String storeCSVUrl;
 
   @Given("^I have submitted a sample CSV of type LFS named \"([^\"]*)\"$")
   public void iHaveASampleCSVOfType(String fileName) throws Throwable {
     try {
-
+      restTemplate = new RestTemplate();
       File file = new File(String.valueOf("src/test/resources/data/"+fileName));
       Resource fileConvert = new FileSystemResource(file);
       MultiValueMap<String,Object> bodyMap = new LinkedMultiValueMap<>();
@@ -43,7 +43,7 @@ public class JobServiceStep {
       headers.setContentType(MediaType.MULTIPART_FORM_DATA);
 
       final HttpEntity<MultiValueMap<String, Object>> request = new HttpEntity<>(bodyMap, headers);
-      restTemplate.exchange(storeCSVUrl, HttpMethod.POST, request, String.class);
+      restTemplate.exchange("http://localhost:9091/jobs/", HttpMethod.POST, request, String.class);
     } catch (org.springframework.web.client.HttpClientErrorException HttpClientErrorException) {
       log.error("An error occurred while communicating with the resource service", HttpClientErrorException);
     }
