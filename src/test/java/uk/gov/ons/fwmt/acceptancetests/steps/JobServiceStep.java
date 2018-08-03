@@ -39,11 +39,8 @@ public class JobServiceStep {
         .build();
   }
 
-  @Given("^I have created a user in the gateway$")
-  public void iHaveCreatedAUserInTheGateway() {
-    String authNo = "INT0";
-    String tmUsername = "string";
-
+  @Given("^I have created the following test user in the gateway with authno \"([^\"]*)\" and TM id \"([^\"]*)\"$")
+  public void iHaveCreatedTheFollowingTestUserInTheGatewayWithAuthnoAndTmId(String authNo, String tmUsername) {
     UserDto userDto = UserDto.builder().authNo(authNo).tmUsername(tmUsername).active(true).alternateAuthNo(null)
         .build();
 
