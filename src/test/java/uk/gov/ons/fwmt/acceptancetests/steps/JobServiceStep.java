@@ -4,7 +4,6 @@ import cucumber.api.java.en.Given;
 import cucumber.api.java.en.Then;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.boot.web.client.RestTemplateBuilder;
-import org.springframework.context.annotation.Bean;
 import org.springframework.core.io.FileSystemResource;
 import org.springframework.core.io.Resource;
 import org.springframework.http.HttpEntity;
@@ -28,8 +27,7 @@ import static org.junit.Assert.assertEquals;
 @Slf4j
 public class JobServiceStep {
 
-  @Bean
-  public RestTemplate resourcesRestTemplate(RestTemplateBuilder builder) {
+  private RestTemplate resourcesRestTemplate(RestTemplateBuilder builder) {
     return builder
         .basicAuthorization("user", "password")
         .build();
@@ -38,6 +36,7 @@ public class JobServiceStep {
   @Given("^I have submitted a sample CSV of type LFS named \"([^\"]*)\"$")
   public void iHaveASampleCSVOfType(String fileName) {
     int expectedHttpStatusCode = 200;
+    String location = "http://localhost:9091/jobs/samples";
 
     final RestTemplate restTemplate = resourcesRestTemplate(new RestTemplateBuilder());
     File file = new File(String.valueOf("src/test/resources/data/" + fileName));
@@ -49,7 +48,7 @@ public class JobServiceStep {
 
     final HttpEntity<MultiValueMap<String, Object>> request = new HttpEntity<>(bodyMap, headers);
     ResponseEntity result = restTemplate
-        .exchange("http://localhost:9091/jobs/samples", HttpMethod.POST, request, String.class);
+        .exchange(location, HttpMethod.POST, request, String.class);
 
     assertEquals(expectedHttpStatusCode, result.getStatusCode().value());
   }
