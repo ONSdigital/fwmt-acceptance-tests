@@ -37,7 +37,7 @@ public class ProcessOHSrequestsFromRM {
     Connection connection = factory.newConnection();
     Channel channel = connection.createChannel();
 
-    for (int i = 0; i > arg1; i++) {
+    for (int i = 0; i < arg1; i++) {
       channel.basicPublish(EXCHANGE_NAME, ROUTING_KEY, null, XML.getBytes());
     }
 
