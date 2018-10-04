@@ -21,7 +21,7 @@ Feature: [OHS] As a system(Gateway) I can receive case update from RM to stop al
 This story covers the scenario where RM receives a 'completed' outcome from EQ or elsewhere, and no further field visit should occur in the field
 In order to stop all visits
 
-	@OHS, @FWMT-261
+  @OHS, @FWMT-261
   Scenario: Online completion calls Cancel OHS Job 
     Given the respondent has completed online
     And the outcome is 'fully completed'
