@@ -36,4 +36,5 @@ repositories {
 dependencies {
 	testCompile 'io.cucumber:cucumber-java:2.3.1'
 	testCompile 'io.cucumber:cucumber-junit:2.3.1'
+    testCompile group: 'com.rabbitmq', name: 'amqp-client', version: '5.4.2'
 }
