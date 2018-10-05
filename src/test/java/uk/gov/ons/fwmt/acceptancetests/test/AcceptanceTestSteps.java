@@ -1,4 +1,4 @@
-package uk.gov.ons.fwmt.acceptancetests;
+package uk.gov.ons.fwmt.acceptancetests.test;
 
 import cucumber.api.java.en.Given;
 
