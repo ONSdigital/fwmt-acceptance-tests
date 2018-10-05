@@ -29,11 +29,24 @@ version = '0.0.1-SNAPSHOT'
 sourceCompatibility = 1.8
 
 repositories {
+	mavenLocal()
+	maven { url "http://artifactory-sdc.onsdigital.uk/artifactory/libs-snapshot-local" }
+	maven { url "http://artifactory-sdc.onsdigital.uk/artifactory/libs-release-local" }
 	mavenCentral()
 }
 
 
 dependencies {
+	compile group: 'org.springframework.retry', name: 'spring-retry', version: '1.2.2.RELEASE'
+	compile group: 'org.springframework', name: 'spring-aop', version: '5.0.8.RELEASE'
+	compile group: 'org.projectlombok', name: 'lombok', version: '1.16.8'
+	compile group: 'uk.gov.ons.fwmt', name: 'fwmt-gateway-common', version: '0.0.8-RELEASE'
+	compile group: 'org.springframework.boot', name: 'spring-boot-starter-amqp', version: '1.5.13.RELEASE'
+	compile('org.springframework.boot:spring-boot-starter')
+	compile group: 'com.fasterxml.jackson.core', name: 'jackson-databind', version: '2.9.5'
+	compile group: 'com.fasterxml.jackson.datatype', name: 'jackson-datatype-jsr310', version: '2.9.5'
+	compile group: 'org.json', name: 'json', version: '20180130'
+
 	testCompile 'io.cucumber:cucumber-java:2.3.1'
 	testCompile 'io.cucumber:cucumber-junit:2.3.1'
 }
