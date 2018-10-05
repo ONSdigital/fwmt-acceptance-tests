@@ -1,4 +1,4 @@
-package uk.gov.ons.fwmt.acceptance_test;
+package uk.gov.ons.fwmt.acceptancetests;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;

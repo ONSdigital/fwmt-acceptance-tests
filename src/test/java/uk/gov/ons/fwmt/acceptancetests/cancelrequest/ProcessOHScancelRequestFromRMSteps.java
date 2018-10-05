@@ -9,12 +9,11 @@ import uk.gov.ons.fwmt.acceptancetests.SpringBootBaseAcceptanceTest;
 
 public class ProcessOHScancelRequestFromRMSteps extends SpringBootBaseAcceptanceTest {
 
-    ProcessOHScancelRequestFromRM ohScancelRequestFromRM = new ProcessOHScancelRequestFromRM();
 
     @Given("^the respondent has completed online$")
     public void theRespondentHasCompletedOnline() {
         // Write code here that turns the phrase above into concrete actions
-        ohScancelRequestFromRM.testPathFromRMToJobSvc();
+        testPathFromRMToJobSvc();
     }
 
     @And("^the outcome is 'fully completed'$")
