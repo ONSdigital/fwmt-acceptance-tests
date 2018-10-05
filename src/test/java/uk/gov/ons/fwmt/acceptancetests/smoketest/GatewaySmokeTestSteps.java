@@ -1,12 +1,10 @@
 package uk.gov.ons.fwmt.acceptancetests.smoketest;
 
 import cucumber.api.java.en.Given;
-import cucumber.api.java.en.Then;
 import org.apache.commons.codec.binary.Base64;
 import org.junit.Assert;
 import org.springframework.amqp.rabbit.connection.CachingConnectionFactory;
 import org.springframework.amqp.rabbit.core.RabbitAdmin;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
@@ -14,7 +12,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.client.RestTemplate;
 
-import java.util.Properties;
 
 public class GatewaySmokeTestSteps {
 
@@ -29,7 +26,7 @@ public class GatewaySmokeTestSteps {
     @Given("^Check RmAdpater is running$")
     public void checkAdpaterRunning() throws Exception {
 
-        final String uri = "http://localhost:9094/actuator/health";
+        final String uri = RMA_URL;
 
         RestTemplate restTemplate = new RestTemplate();
         String result = restTemplate.getForObject(uri, String.class);
@@ -40,7 +37,7 @@ public class GatewaySmokeTestSteps {
     @Given("^Check Job Service is running$")
     public void checkJobserviceRunning() throws Exception {
 
-        final String plainCreds = "user:password";
+        final String plainCreds = JS_USERNAME+":"+JS_PASSWORD;
         byte[] plainCredsBytes = plainCreds.getBytes();
         byte[] base64CredsBytes = Base64.encodeBase64(plainCredsBytes);
         String base64Creds = new String(base64CredsBytes);
@@ -48,81 +45,12 @@ public class GatewaySmokeTestSteps {
         HttpHeaders headers = new HttpHeaders();
         headers.add("Authorization", "Basic " + base64Creds);
 
-        final String url = "http://localhost:9999/jobs/health";
+        final String url = JS_URL;
         RestTemplate restTemplate = new RestTemplate();
 
         HttpEntity<String> request = new HttpEntity<String>(headers);
         ResponseEntity<String> response = restTemplate.exchange(url, HttpMethod.GET, request, String.class);
         String result = response.getBody();
-
-        Assert.assertTrue(result.contains("\"status\":\"UP\""));
-    }
-
-    @Given("^Check Resource Service is running$")
-    public void checkResourceServiceRunning() throws Exception {
-
-        final String plainCreds = "user:password";
-        byte[] plainCredsBytes = plainCreds.getBytes();
-        byte[] base64CredsBytes = Base64.encodeBase64(plainCredsBytes);
-        String base64Creds = new String(base64CredsBytes);
-
-        HttpHeaders headers = new HttpHeaders();
-        headers.add("Authorization", "Basic " + base64Creds);
-
-        final String url = "http://localhost:9093/resources/health";
-        RestTemplate restTemplate = new RestTemplate();
-
-        HttpEntity<String> request = new HttpEntity<String>(headers);
-        ResponseEntity<String> response = restTemplate.exchange(url, HttpMethod.GET, request, String.class);
-        String result = response.getBody();
-
-        System.out.println(result);
-
-        Assert.assertTrue(result.contains("\"status\":\"UP\""));
-    }
-
-    @Given("^Check Legacy Jobservice is running$")
-    public void checkLegacyJobserviceRunning() throws Exception {
-
-        final String plainCreds = "user:password";
-        byte[] plainCredsBytes = plainCreds.getBytes();
-        byte[] base64CredsBytes = Base64.encodeBase64(plainCredsBytes);
-        String base64Creds = new String(base64CredsBytes);
-
-        HttpHeaders headers = new HttpHeaders();
-        headers.add("Authorization", "Basic " + base64Creds);
-
-        final String url = "http://localhost:9091/jobs/health";
-        RestTemplate restTemplate = new RestTemplate();
-
-        HttpEntity<String> request = new HttpEntity<String>(headers);
-        ResponseEntity<String> response = restTemplate.exchange(url, HttpMethod.GET, request, String.class);
-        String result = response.getBody();
-
-        System.out.println(result);
-
-        Assert.assertTrue(result.contains("\"status\":\"UP\""));
-    }
-
-    @Given("^Check Staff Service is running$")
-    public void checkStaffserviceRunning() throws Exception {
-
-        final String plainCreds = "user:password";
-        byte[] plainCredsBytes = plainCreds.getBytes();
-        byte[] base64CredsBytes = Base64.encodeBase64(plainCredsBytes);
-        String base64Creds = new String(base64CredsBytes);
-
-        HttpHeaders headers = new HttpHeaders();
-        headers.add("Authorization", "Basic " + base64Creds);
-
-        final String url = "http://localhost:9092/staff/health";
-        RestTemplate restTemplate = new RestTemplate();
-
-        HttpEntity<String> request = new HttpEntity<String>(headers);
-        ResponseEntity<String> response = restTemplate.exchange(url, HttpMethod.GET, request, String.class);
-        String result = response.getBody();
-
-        System.out.println(result);
 
         Assert.assertTrue(result.contains("\"status\":\"UP\""));
     }
@@ -136,13 +64,13 @@ public class GatewaySmokeTestSteps {
       String result2 = rabbitAdmin.getQueueProperties("jobsvc-adapter").getProperty("QUEUE_NAME");
       String result3 = rabbitAdmin.getQueueProperties("adapter-jobSvc").getProperty("QUEUE_NAME");
       String result4 = rabbitAdmin.getQueueProperties("adapter-rm").getProperty("QUEUE_NAME");
-      //String result5 = rabbitAdmin.getQueueProperties("Action.Field").getProperty("QUEUE_NAME");
+      String result5 = rabbitAdmin.getQueueProperties("Action.Field").getProperty("QUEUE_NAME");
 
       Assert.assertEquals(result1,"rm-adapter");
       Assert.assertEquals(result2,"jobsvc-adapter");
       Assert.assertEquals(result3,"adapter-jobSvc");
       Assert.assertEquals(result4,"adapter-rm");
-      //Assert.assertEquals(result5,"Action.Field");
+      Assert.assertEquals(result5,"Action.Field");
     }
 
     @Given("^Check Tmoblie is running$")
