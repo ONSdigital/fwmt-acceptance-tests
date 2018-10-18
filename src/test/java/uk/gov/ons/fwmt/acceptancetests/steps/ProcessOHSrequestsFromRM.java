@@ -1,4 +1,4 @@
-package uk.gov.ons.fwmt.acceptancetests;
+package uk.gov.ons.fwmt.acceptancetests.steps;
 
 import com.rabbitmq.client.Channel;
 import com.rabbitmq.client.Connection;
@@ -35,6 +35,7 @@ public class ProcessOHSrequestsFromRM {
       + "            <postcode>AA1 1AA</postcode>\n"
       + "            <country>E</country>\n"
       + "        </address>\n"
+      + "        <returnByDate>11/11/2018</returnByDate>\n"
       + "        <legalBasis>Statistics of Trade Act 1947</legalBasis>\n"
       + "        <caseGroupStatus>NOTSTARTED</caseGroupStatus>\n"
       + "        <caseId>95db01c8-f117-4c5b-9672-757ab661220e</caseId>\n"

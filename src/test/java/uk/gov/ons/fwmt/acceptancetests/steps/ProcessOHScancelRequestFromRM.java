@@ -1,4 +1,4 @@
-package uk.gov.ons.fwmt.acceptancetests;
+package uk.gov.ons.fwmt.acceptancetests.steps;
 
 import com.rabbitmq.client.Channel;
 import com.rabbitmq.client.Connection;

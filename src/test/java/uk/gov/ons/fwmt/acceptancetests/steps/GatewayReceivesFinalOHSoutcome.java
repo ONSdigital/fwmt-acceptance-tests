@@ -1,4 +1,4 @@
-package uk.gov.ons.fwmt.acceptancetests;
+package uk.gov.ons.fwmt.acceptancetests.steps;
 
 import cucumber.api.PendingException;
 import cucumber.api.java.en.And;
