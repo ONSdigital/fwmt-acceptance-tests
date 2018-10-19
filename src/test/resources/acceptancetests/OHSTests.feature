@@ -2,7 +2,7 @@ Feature: OHS Tests
 
   @OHS
   Scenario Outline: Process OHS Requests From RM
-    Given RM sends LMS <jobs> <type> case samples to the Gateway
+    Given RM sends OHS <jobs> <type> case samples to the Gateway
     Then loaded in TM <jobs>
 
   Examples:
