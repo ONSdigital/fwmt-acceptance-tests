@@ -86,16 +86,14 @@ public class OHSSteps {
     return factory;
   }
 
-  private String setMessage(int noOfJobs, String type, Channel channel) throws IOException, InterruptedException {
+  private String setMessage(int noOfJobs, String type, Channel channel) throws IOException {
     String message;
     switch (type) {
     case "create":
       message = readFile("src/text/resources/files/xmlcreate.xml");
-      sendToQueue(noOfJobs, message, channel);
       return message;
     case "cancel":
       message = readFile("src/text/resources/files/xmlcancel.xml");
-      sendToQueue(noOfJobs, message, channel);
       return message;
     default:
       log.error("Unable to map message type");
