@@ -44,14 +44,14 @@ public class OHSSteps {
   }
 
   @Given("^RM sends OHS (\\d+) \"([^\"]*)\" case samples to the Gateway$")
-  public void rm_sends_LMS_case_samples_to_the_Gateway(int noOfJobs, String type)
+  public void rm_sends_LMS_case_samples_to_the_Gateway(int noOfJobs, String typeOfMessage)
       throws IOException, TimeoutException, InterruptedException {
     ConnectionFactory factory = getConnectionFactory();
 
     Connection connection = factory.newConnection();
     Channel channel = connection.createChannel();
 
-    String message = setMessage(type);
+    String message = setMessage(typeOfMessage);
 
     sendToQueue(noOfJobs, message, channel);
 
@@ -86,9 +86,9 @@ public class OHSSteps {
     return factory;
   }
 
-  private String setMessage(String type) throws IOException {
+  private String setMessage(String typeOfMessage) throws IOException {
     String message;
-    switch (type) {
+    switch (typeOfMessage) {
     case "create":
       message = readFile("src/text/resources/files/xmlcreate.xml");
       return message;
@@ -111,7 +111,7 @@ public class OHSSteps {
   }
 
   @Then("^loaded in TM (\\d+)$")
-  public void loaded_in_TM(int jobs) throws IOException {
+  public void loaded_in_TM(int noOfJobs) throws IOException {
     URL url = new URL("http://localhost:9099/logger/allMessages");
     HttpURLConnection conn = (HttpURLConnection) url.openConnection();
     conn.setRequestMethod("GET");
@@ -137,6 +137,6 @@ public class OHSSteps {
     List<MockMessage> message = mapper.readValue(result, new TypeReference<List<MockMessage>>() {
     });
 
-    assertEquals(jobs, message.size());
+    assertEquals(noOfJobs, message.size());
   }
 }
