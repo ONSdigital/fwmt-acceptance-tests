@@ -66,12 +66,8 @@ public class OHSSteps {
     StringBuilder stringBuilder = new StringBuilder();
     String line;
 
-    try {
-      while ((line = bufferedReader.readLine()) != null) {
-        stringBuilder.append(line).append("\n");
-      }
-    } catch (IOException e) {
-      e.printStackTrace();
+    while ((line = bufferedReader.readLine()) != null) {
+      stringBuilder.append(line).append("\n");
     }
     return stringBuilder.toString();
   }
