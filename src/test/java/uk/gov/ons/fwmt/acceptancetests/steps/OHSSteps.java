@@ -51,7 +51,7 @@ public class OHSSteps {
     Connection connection = factory.newConnection();
     Channel channel = connection.createChannel();
 
-    String message = setMessage(noOfJobs, type, channel);
+    String message = setMessage(type);
 
     sendToQueue(noOfJobs, message, channel);
 
