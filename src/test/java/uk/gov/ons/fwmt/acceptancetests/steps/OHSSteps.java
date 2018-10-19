@@ -86,7 +86,7 @@ public class OHSSteps {
     return factory;
   }
 
-  private String setMessage(int noOfJobs, String type, Channel channel) throws IOException {
+  private String setMessage(String type) throws IOException {
     String message;
     switch (type) {
     case "create":
