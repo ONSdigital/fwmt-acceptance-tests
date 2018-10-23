@@ -29,6 +29,6 @@
         <userDescription>FWMT Integration 1</userDescription>
         <surveyName>Labour Market Survey</surveyName>
         <surveyRef>LMS</surveyRef>
-        <returnByDate>duck</returnByDate>
+        <returnByDate>10/10/2018</returnByDate>
     </actionRequest>
 </ns2:actionInstruction>

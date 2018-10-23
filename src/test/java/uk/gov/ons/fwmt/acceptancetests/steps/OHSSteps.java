@@ -121,19 +121,7 @@ public class OHSSteps {
 
     BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(
         (httpURLConnection.getInputStream())));
-    StringBuilder stringBuilder = new StringBuilder();
-    String line;
-
-
-    while ((line = bufferedReader.readLine()) != null) {
-      int count = 1;
-      System.out.println(count + ": " + bufferedReader.readLine());
-      stringBuilder.append(line).append("\n");
-    }
-    String result = stringBuilder.toString();
-    System.out.println(result);
-
-    result.replaceAll("(^\\[.*$|^.*SOAP.*$|^.*<ns2:SendC.*$)", "");
+    String result = bufferedReader.readLine();
 
     ObjectMapper mapper = new ObjectMapper();
     List<MockMessage> message = mapper.readValue(result, new TypeReference<List<MockMessage>>() {
