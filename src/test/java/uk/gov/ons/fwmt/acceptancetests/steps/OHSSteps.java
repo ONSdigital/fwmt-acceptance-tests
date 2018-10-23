@@ -32,14 +32,18 @@ public class OHSSteps {
   private int rmPort = 6672;
   private String virtualHost = "/";
 
-  @Before("Clears any previous jobs from mock")
+  @Before
   public void resetMock() throws IOException {
     URL url = new URL("http://localhost:9099/logger/reset");
-    HttpURLConnection conn = (HttpURLConnection) url.openConnection();
-    conn.setRequestMethod("GET");
-    if (conn.getResponseCode() != 200) {
+    HttpURLConnection httpURLConnection = (HttpURLConnection) url.openConnection();
+    httpURLConnection.setRequestMethod("GET");
+    checkConnection(httpURLConnection);
+  }
+
+  private void checkConnection(HttpURLConnection httpURLConnection) throws IOException {
+    if (httpURLConnection.getResponseCode() != 200) {
       throw new RuntimeException("Failed : HTTP error code : "
-          + conn.getResponseCode());
+          + httpURLConnection.getResponseCode());
     }
   }
 
@@ -86,10 +90,10 @@ public class OHSSteps {
     String message;
     switch (typeOfMessage) {
     case "create":
-      message = readFile("src/text/resources/files/xmlcreate.xml");
+      message = readFile("src/test/resources/files/xmlcreate.xml");
       return message;
     case "cancel":
-      message = readFile("src/text/resources/files/xmlcancel.xml");
+      message = readFile("src/test/resources/files/xmlcancel.xml");
       return message;
     default:
       log.error("Unable to map message type");
@@ -109,25 +113,27 @@ public class OHSSteps {
   @Then("^loaded in TM (\\d+)$")
   public void loaded_in_TM(int noOfJobs) throws IOException {
     URL url = new URL("http://localhost:9099/logger/allMessages");
-    HttpURLConnection conn = (HttpURLConnection) url.openConnection();
-    conn.setRequestMethod("GET");
-    conn.setRequestProperty("Accept", "application/json");
+    HttpURLConnection httpURLConnection = (HttpURLConnection) url.openConnection();
+    httpURLConnection.setRequestMethod("GET");
+    httpURLConnection.setRequestProperty("Accept", "application/json");
 
-    if (conn.getResponseCode() != 200) {
-      throw new RuntimeException("Failed : HTTP error code : "
-          + conn.getResponseCode());
-    }
+    checkConnection(httpURLConnection);
 
     BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(
-        (conn.getInputStream())));
+        (httpURLConnection.getInputStream())));
     StringBuilder stringBuilder = new StringBuilder();
     String line;
 
+
     while ((line = bufferedReader.readLine()) != null) {
+      int count = 1;
+      System.out.println(count + ": " + bufferedReader.readLine());
       stringBuilder.append(line).append("\n");
     }
-
     String result = stringBuilder.toString();
+    System.out.println(result);
+
+    result.replaceAll("(^\\[.*$|^.*SOAP.*$|^.*<ns2:SendC.*$)", "");
 
     ObjectMapper mapper = new ObjectMapper();
     List<MockMessage> message = mapper.readValue(result, new TypeReference<List<MockMessage>>() {
