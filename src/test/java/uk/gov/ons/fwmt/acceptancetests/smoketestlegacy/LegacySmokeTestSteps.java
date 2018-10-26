@@ -50,7 +50,6 @@ public class LegacySmokeTestSteps {
                 username = SS_USERNAME;
                 password = SS_PASSWORD;
                 url = SS_URL;
-                System.out.println("case ss" + url);
                 break;
             case "TMoblie":
                 username = TM_USERNAME;
