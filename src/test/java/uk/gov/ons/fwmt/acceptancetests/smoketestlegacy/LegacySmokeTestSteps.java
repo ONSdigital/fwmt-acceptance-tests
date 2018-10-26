@@ -36,23 +36,23 @@ public class LegacySmokeTestSteps {
         String url = "unknown";
 
         switch (type) {
-            case "rs":
+            case "Resource Serivce":
                 username = RS_USERNAME;
                 password = RS_PASSWORD;
                 url = RS_URL;
                 break;
-            case "ls":
+            case "Legacy Job Serivce":
                 username = LS_USERNAME;
                 password = LS_PASSWORD;
                 url = LS_URL;
                 break;
-            case "ss":
+            case "Staff Serivce":
                 username = SS_USERNAME;
                 password = SS_PASSWORD;
                 url = SS_URL;
                 System.out.println("case ss" + url);
                 break;
-            case "tm":
+            case "TMoblie":
                 username = TM_USERNAME;
                 password = TM_PASSWORD;
                 url = TM_URL;
@@ -71,8 +71,6 @@ public class LegacySmokeTestSteps {
         byte[] plainCredsBytes = plainCreds.getBytes();
         byte[] base64CredsBytes = Base64.encodeBase64(plainCredsBytes);
         String base64Creds = new String(base64CredsBytes);
-
-        System.out.println(url);
 
         HttpHeaders headers = new HttpHeaders();
         headers.add("Authorization", "Basic " + base64Creds);
