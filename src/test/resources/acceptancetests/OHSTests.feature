@@ -7,4 +7,5 @@ Feature: OHS Tests
 
   Examples:
   |type|jobs|
-  | "create" | 1    |
+  |"create"|1|
+  |"cancel"|5|

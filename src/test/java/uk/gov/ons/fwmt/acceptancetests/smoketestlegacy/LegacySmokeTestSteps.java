@@ -28,10 +28,45 @@ public class LegacySmokeTestSteps {
     static final String TM_PASSWORD = System.getenv("TM_PASSWORD");
     static final String TM_URL = System.getenv("TM_URL");;
 
-    @Given("^Check Resource Service is running$")
-    public void checkResourceServiceRunning() throws Exception {
 
-        final String plainCreds = RS_USERNAME+":"+RS_PASSWORD;
+    public void setServiceCredentials(String type) throws Exception {
+
+        String username = "unknown";
+        String password = "unknown";
+        String url = "unknown";
+
+        switch (type) {
+            case "Resource Serivce":
+                username = RS_USERNAME;
+                password = RS_PASSWORD;
+                url = RS_URL;
+                break;
+            case "Legacy Job Serivce":
+                username = LS_USERNAME;
+                password = LS_PASSWORD;
+                url = LS_URL;
+                break;
+            case "Staff Serivce":
+                username = SS_USERNAME;
+                password = SS_PASSWORD;
+                url = SS_URL;
+                break;
+            case "TMoblie":
+                username = TM_USERNAME;
+                password = TM_PASSWORD;
+                url = TM_URL;
+                break;
+            default:
+                break;
+        }
+        checkServiceRunning(username,password,url);
+
+
+    }
+
+    public void checkServiceRunning (String username, String password, String url){
+
+        final String plainCreds = username+":"+password;
         byte[] plainCredsBytes = plainCreds.getBytes();
         byte[] base64CredsBytes = Base64.encodeBase64(plainCredsBytes);
         String base64Creds = new String(base64CredsBytes);
@@ -39,7 +74,6 @@ public class LegacySmokeTestSteps {
         HttpHeaders headers = new HttpHeaders();
         headers.add("Authorization", "Basic " + base64Creds);
 
-        final String url = RS_URL;
         RestTemplate restTemplate = new RestTemplate();
 
         HttpEntity<String> request = new HttpEntity<String>(headers);
@@ -47,6 +81,11 @@ public class LegacySmokeTestSteps {
         String result = response.getBody();
 
         Assert.assertTrue(result.contains("\"status\":\"UP\""));
+    }
+
+    @Given("^Check \"([^\"]*)\" is running$")
+    public void checkResourceServiceRunning(String service) throws Exception {
+        setServiceCredentials(service);
     }
 
     @Given("^Check Legacy Jobservice is running$")

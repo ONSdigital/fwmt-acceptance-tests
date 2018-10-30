@@ -1,5 +1,8 @@
 package uk.gov.ons.fwmt.acceptancetests.smoketest;
 
+import com.rabbitmq.client.Channel;
+import com.rabbitmq.client.Connection;
+import com.rabbitmq.client.ConnectionFactory;
 import cucumber.api.java.en.Given;
 import org.apache.commons.codec.binary.Base64;
 import org.junit.Assert;
@@ -15,80 +18,111 @@ import org.springframework.web.client.RestTemplate;
 
 public class GatewaySmokeTestSteps {
 
-    static final String RMA_URL = System.getenv("RMA_URL");;
-    static final String JS_USERNAME = System.getenv("JS_USERNAME");
-    static final String JS_PASSWORD = System.getenv("JS_PASSWORD");
-    static final String JS_URL = System.getenv("JS_URL");;
-    static final String TM_USERNAME = System.getenv("TM_USERNAME");
-    static final String TM_PASSWORD = System.getenv("TM_PASSWORD");
-    static final String TM_URL = System.getenv("TM_URL");;
+  static final String RMA_URL = System.getenv("RMA_URL");
+  static final String RMA_RABBIT_URL = System.getenv("RMA_RABBIT_URL");
 
-    @Given("^Check RmAdpater is running$")
-    public void checkAdpaterRunning() throws Exception {
+  static final String JS_USERNAME = System.getenv("JS_USERNAME");
+  static final String JS_PASSWORD = System.getenv("JS_PASSWORD");
+  static final String JS_URL = System.getenv("JS_URL");
+  static final String JS_RABBIT_URL =  System.getenv("JS_RABBIT_URL");
 
-        final String uri = RMA_URL;
+  static final String TM_USERNAME = System.getenv("TM_USERNAME");
+  static final String TM_PASSWORD = System.getenv("TM_PASSWORD");
+  static final String TM_URL = System.getenv("TM_URL");
 
-        RestTemplate restTemplate = new RestTemplate();
-        String result = restTemplate.getForObject(uri, String.class);
 
-        Assert.assertTrue(result.contains("\"status\":\"UP\""));
-    }
 
-    @Given("^Check Job Service is running$")
-    public void checkJobserviceRunning() throws Exception {
 
-        final String plainCreds = JS_USERNAME+":"+JS_PASSWORD;
-        byte[] plainCredsBytes = plainCreds.getBytes();
-        byte[] base64CredsBytes = Base64.encodeBase64(plainCredsBytes);
-        String base64Creds = new String(base64CredsBytes);
+static final String username = System.getenv("RABBIT_USER");
+  static final String password = System.getenv("RABBIT_PASSWORD");
+  static final String hostname = System.getenv("RABBIT_HOSTNAME");
+  static final String port = System.getenv("RABBIT_PORT");
 
-        HttpHeaders headers = new HttpHeaders();
-        headers.add("Authorization", "Basic " + base64Creds);
+  static final String virtualHost = "/";
 
-        final String url = JS_URL;
-        RestTemplate restTemplate = new RestTemplate();
+  @Given("^Check RmAdpater is running$")
+  public void checkAdpaterRunning() throws Exception {
 
-        HttpEntity<String> request = new HttpEntity<String>(headers);
-        ResponseEntity<String> response = restTemplate.exchange(url, HttpMethod.GET, request, String.class);
-        String result = response.getBody();
+    final String uri = RMA_URL;
 
-        Assert.assertTrue(result.contains("\"status\":\"UP\""));
-    }
+    RestTemplate restTemplate = new RestTemplate();
+    String result = restTemplate.getForObject(uri, String.class);
 
-    @Given("^Check Rabbit is running$")
-    public void checkRabbitRunning() throws Exception {
+    Assert.assertTrue(result.contains("\"status\":\"UP\""));
+  }
 
-      CachingConnectionFactory connectionFactory = new CachingConnectionFactory();
-      RabbitAdmin rabbitAdmin = new RabbitAdmin(connectionFactory);
-      String result1 = rabbitAdmin.getQueueProperties("rm-adapter").getProperty("QUEUE_NAME");
-      String result2 = rabbitAdmin.getQueueProperties("jobsvc-adapter").getProperty("QUEUE_NAME");
-      String result3 = rabbitAdmin.getQueueProperties("adapter-jobSvc").getProperty("QUEUE_NAME");
-      String result4 = rabbitAdmin.getQueueProperties("adapter-rm").getProperty("QUEUE_NAME");
-      String result5 = rabbitAdmin.getQueueProperties("Action.Field").getProperty("QUEUE_NAME");
+  @Given("^Check Job Service is running$")
+  public void checkJobserviceRunning() throws Exception {
 
-      Assert.assertEquals(result1,"rm-adapter");
-      Assert.assertEquals(result2,"jobsvc-adapter");
-      Assert.assertEquals(result3,"adapter-jobSvc");
-      Assert.assertEquals(result4,"adapter-rm");
-      Assert.assertEquals(result5,"Action.Field");
-    }
+    final String plainCreds = JS_USERNAME+":"+JS_PASSWORD;
+    byte[] plainCredsBytes = plainCreds.getBytes();
+    byte[] base64CredsBytes = Base64.encodeBase64(plainCredsBytes);
+    String base64Creds = new String(base64CredsBytes);
 
-    @Given("^Check Tmoblie is running$")
-    public void checkTmobileRunning() throws Exception {
+    HttpHeaders headers = new HttpHeaders();
+    headers.add("Authorization", "Basic " + base64Creds);
 
-        final String plainCreds = TM_USERNAME+":"+TM_PASSWORD;
-        byte[] plainCredsBytes = plainCreds.getBytes();
-        byte[] base64CredsBytes = Base64.encodeBase64(plainCredsBytes);
-        String base64Creds = new String(base64CredsBytes);
+    final String url = JS_URL;
+    RestTemplate restTemplate = new RestTemplate();
 
-        HttpHeaders headers = new HttpHeaders();
-        headers.add("Authorization", "Basic " + base64Creds);
-        final String url = TM_URL;
-        RestTemplate restTemplate = new RestTemplate();
-        HttpEntity<String> request = new HttpEntity<String>(headers);
-        ResponseEntity<String> response = restTemplate.exchange(url, HttpMethod.GET, request, String.class);
-        HttpStatus result = response.getStatusCode();
+    HttpEntity<String> request = new HttpEntity<String>(headers);
+    ResponseEntity<String> response = restTemplate.exchange(url, HttpMethod.GET, request, String.class);
+    String result = response.getBody();
 
-        Assert.assertEquals(result, HttpStatus.OK);
-    }
+    Assert.assertTrue(result.contains("\"status\":\"UP\""));
+  }
+
+
+  @Given("^Check RM Rabbit is running$")
+  public void checkRMRabbitRunning() throws Exception {
+    final String uri = RMA_RABBIT_URL;
+
+    RestTemplate restTemplate = new RestTemplate();
+    String result = restTemplate.getForObject(uri, String.class);
+
+    Assert.assertTrue(result.equalsIgnoreCase("true"));
+
+  }
+
+  @Given("^Check Rabbit is running$")
+  public void checkRabbitRunning() throws Exception {
+
+
+    final String plainCreds = JS_USERNAME+":"+JS_PASSWORD;
+    byte[] plainCredsBytes = plainCreds.getBytes();
+    byte[] base64CredsBytes = Base64.encodeBase64(plainCredsBytes);
+    String base64Creds = new String(base64CredsBytes);
+
+    HttpHeaders headers = new HttpHeaders();
+    headers.add("Authorization", "Basic " + base64Creds);
+
+    final String url = JS_RABBIT_URL;
+    RestTemplate restTemplate = new RestTemplate();
+
+    HttpEntity<String> request = new HttpEntity<String>(headers);
+    ResponseEntity<String> response = restTemplate.exchange(url, HttpMethod.GET, request, String.class);
+    String result = response.getBody();
+
+    Assert.assertEquals("[\"rm-adapter\",\"jobsvc-adapter\",\"adapter-jobSvc\",\"adapter-rm\"]",result);
+
+  }
+
+  @Given("^Check Tmoblie is running$")
+  public void checkTmobileRunning() throws Exception {
+
+    final String plainCreds = TM_USERNAME + ":" + TM_PASSWORD;
+    byte[] plainCredsBytes = plainCreds.getBytes();
+    byte[] base64CredsBytes = Base64.encodeBase64(plainCredsBytes);
+    String base64Creds = new String(base64CredsBytes);
+
+    HttpHeaders headers = new HttpHeaders();
+    headers.add("Authorization", "Basic " + base64Creds);
+    final String url = TM_URL;
+    RestTemplate restTemplate = new RestTemplate();
+    HttpEntity<String> request = new HttpEntity<String>(headers);
+    ResponseEntity<String> response = restTemplate.exchange(url, HttpMethod.GET, request, String.class);
+    HttpStatus result = response.getStatusCode();
+
+    Assert.assertEquals(result, HttpStatus.OK);
+  }
 }

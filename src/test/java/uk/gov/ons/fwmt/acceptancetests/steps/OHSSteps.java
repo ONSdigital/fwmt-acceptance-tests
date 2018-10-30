@@ -120,8 +120,15 @@ public class OHSSteps {
     checkConnection(httpURLConnection);
 
     BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(
-        (httpURLConnection.getInputStream())));
-    String result = bufferedReader.readLine();
+        (conn.getInputStream())));
+    StringBuilder stringBuilder = new StringBuilder();
+    String line;
+
+    while ((line = bufferedReader.readLine()) != null) {
+      stringBuilder.append(line).append("\n");
+    }
+
+    String result = stringBuilder.toString();
 
     ObjectMapper mapper = new ObjectMapper();
     List<MockMessage> message = mapper.readValue(result, new TypeReference<List<MockMessage>>() {
