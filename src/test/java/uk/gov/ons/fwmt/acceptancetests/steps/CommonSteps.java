@@ -14,8 +14,8 @@ public class CommonSteps {
 
   MessageSender ms;
 
-  public static final String LMS_RESPONSE= "";
-  private static final String EXPECTED_XML = "";
+  public static final String LMS_RESPONSE = "<?xml version=\"1.0\" encoding=\"utf-8\"?><soap:Envelope xmlns:soap=\"http://schemas.xmlsoap.org/soap/envelope/\" xmlns:xsd=\"http://www.w3.org/2001/XMLSchema\" xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\"><soap:Body><request xmlns=\"http://schemas.consiliumtechnologies.com/services/mobile/2009/03/messaging\"><Id>IDENTITY</Id><Content>&lt;![CDATA[&lt;?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"yes\"?&gt;&lt;ns2:FwmtOHSJobStatusNotification xmlns:ns2=\"http://ons.gov.uk/fwmt/FwmtOHSJobStatusNotification\"&gt;    &lt;eventDate&gt;2018-10-29T08:03:40.269Z&lt;/eventDate&gt;    &lt;jobIdentity&gt;1000000000431094&lt;/jobIdentity&gt;    &lt;nonContactDetail/&gt;    &lt;outcomeCategory&gt;Will complete&lt;/outcomeCategory&gt;    &lt;outcomeReason&gt;Will complete&lt;/outcomeReason&gt;    &lt;propertyDetails&gt;        &lt;description&gt;No physical impediments or barriers&lt;/description&gt;    &lt;/propertyDetails&gt;    &lt;username&gt;USERNAME&lt;/username&gt;    &lt;additionalProperties&gt;        &lt;name&gt;caseId&lt;/name&gt;        &lt;value&gt;CASEID&lt;/value&gt;    &lt;/additionalProperties&gt;    &lt;additionalProperties&gt;        &lt;name&gt;TLA&lt;/name&gt;        &lt;value&gt;OHS&lt;/value&gt;    &lt;/additionalProperties&gt;    &lt;additionalProperties&gt;        &lt;name&gt;wave&lt;/name&gt;        &lt;value&gt;1&lt;/value&gt;    &lt;/additionalProperties&gt;&lt;/ns2:FwmtOHSJobStatusNotification&gt;]]&gt;</Content><Format>fwmtOHSJobStatusNotification</Format></request></soap:Body></soap:Envelope>";
+  private static final String EXPECTED_XML = "<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"yes\"?><ns2:FwmtOHSJobStatusNotification xmlns:ns2=\"http://ons.gov.uk/fwmt/FwmtOHSJobStatusNotification\"><eventDate>2018-10-29T08:03:40.269Z</eventDate><jobIdentity>1000000000431094</jobIdentity><nonContactDetail/><outcomeCategory>Will complete</outcomeCategory><outcomeReason>Will complete</outcomeReason><propertyDetails><description>No physical impediments or barriers</description></propertyDetails><username>USERNAME</username><additionalProperties><name>caseId</name><value>CASEID</value></additionalProperties><additionalProperties><name>TLA</name><value>OHS</value></additionalProperties><additionalProperties><name>wave</name><value>1</value></additionalProperties></ns2:FwmtOHSJobStatusNotification>";
   public CommonSteps() throws IOException, TimeoutException {
     ms =  new MessageSender();
   }
@@ -37,7 +37,7 @@ public class CommonSteps {
 
   @Given("^the response contains the outcome and caseId$")
   public void the_response_contains_the_outcome_and_caseId() throws Exception {
-    assertTrue(LMS_RESPONSE.contains("&lt;name&gt;caseId&lt;/name&gt;&lt;value&gt;df670a12-1c5e-4530-b863-3ffc64d9159f&lt;/value&gt;"));
+    assertTrue(LMS_RESPONSE.contains("&lt;name&gt;caseId&lt;/name&gt;        &lt;value&gt;CASEID&lt;/value&gt;"));
     assertTrue(LMS_RESPONSE.contains("&lt;outcomeCategory&gt;Will complete&lt;/outcomeCategory&gt;"));
     assertTrue(LMS_RESPONSE.contains("&lt;outcomeReason&gt;Will complete&lt;/outcomeReason&gt;"));
   }
