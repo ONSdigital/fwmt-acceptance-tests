@@ -6,10 +6,12 @@ Feature: OHS Tests
     Then the message will be put on the queue to RM
     And the message is in the RM composite format
 
+  @OHS
+  Scenario Outline: Process OHS Requests From RM
+    Given RM sends OHS <jobs> <type> case samples to the Gateway
+    Then loaded in TM <jobs>
 
-
-
-#    Given: the case outcome and the caseid has been passed from TM to the Gateway
-#    When: The Gateway receives the case outcome
-#    And: convert the outcome from TM message format to RM format  (composite message)
-#    Then: the Gateway will immediately send the outcome to RM with the case id
+  Examples:
+  |type|jobs|
+  |"create"|1|
+  |"cancel"|5|

@@ -1,4 +1,4 @@
-package uk.gov.ons.fwmt.acceptancetests.OHSTests;
+package uk.gov.ons.fwmt.acceptancetests.ohstests;
 
 import cucumber.api.CucumberOptions;
 import cucumber.api.junit.Cucumber;
