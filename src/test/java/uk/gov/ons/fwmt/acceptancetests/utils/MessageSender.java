@@ -1,89 +1,94 @@
 package uk.gov.ons.fwmt.acceptancetests.utils;
 
-import javax.xml.soap.MessageFactory;
-import javax.xml.soap.MimeHeaders;
-import javax.xml.soap.SOAPBody;
-import javax.xml.soap.SOAPConnection;
-import javax.xml.soap.SOAPConnectionFactory;
-import javax.xml.soap.SOAPElement;
-import javax.xml.soap.SOAPEnvelope;
-import javax.xml.soap.SOAPException;
-import javax.xml.soap.SOAPMessage;
-import javax.xml.soap.SOAPPart;
+import com.rabbitmq.client.AMQP;
+import com.rabbitmq.client.Channel;
+import com.rabbitmq.client.Connection;
+import com.rabbitmq.client.ConnectionFactory;
+import com.rabbitmq.client.Consumer;
+import com.rabbitmq.client.DefaultConsumer;
+import com.rabbitmq.client.Envelope;
+import lombok.NoArgsConstructor;
+import org.apache.http.auth.AuthenticationException;
+import org.apache.http.auth.UsernamePasswordCredentials;
+import org.apache.http.client.methods.CloseableHttpResponse;
+import org.apache.http.client.methods.HttpPost;
+import org.apache.http.entity.StringEntity;
+import org.apache.http.impl.auth.BasicScheme;
+import org.apache.http.impl.client.CloseableHttpClient;
+import org.apache.http.impl.client.HttpClients;
+
+import java.io.IOException;
+import java.util.concurrent.TimeoutException;
+
+import static uk.gov.ons.fwmt.acceptancetests.utils.Config.BASIC_AUTH_PASSWORD;
+import static uk.gov.ons.fwmt.acceptancetests.utils.Config.BASIC_AUTH_USER;
+import static uk.gov.ons.fwmt.acceptancetests.utils.Config.JOB_SVC_URL;
+import static uk.gov.ons.fwmt.acceptancetests.utils.Config.TM_RESPONSE_ENDPOINT;
+import static uk.gov.ons.fwmt.fwmtgatewaycommon.config.QueueNames.ADAPTER_TO_RM_QUEUE;
+
 
 public class MessageSender {
 
-  public int sendResponseMessage(String data) {
+  private final String USER_AGENT = "Mozilla/5.0";
 
-    return 1;
+  private static String message;
+  private static int messageCount;
+
+  public MessageSender() throws IOException, TimeoutException {
+    ConnectionFactory factory = new ConnectionFactory();
+    factory.setHost("localhost");
+    Connection connection = factory.newConnection();
+    Channel channel = connection.createChannel();
+
+    channel.queueDeclarePassive(ADAPTER_TO_RM_QUEUE);
+    Consumer consumer = new DefaultConsumer(channel) {
+      @Override
+      public void handleDelivery(String consumerTag, Envelope envelope,
+          AMQP.BasicProperties properties, byte[] body)
+          throws IOException {
+        message = new String(body, "UTF-8");
+        messageCount++;
+      }
+    };
+
+    channel.basicConsume(ADAPTER_TO_RM_QUEUE, true, consumer);
   }
 
-  private static void callSoapWebService(String soapEndpointUrl, String soapAction) {
+  public int sendResponseMessage(String data) throws IOException, AuthenticationException {
+
+    CloseableHttpClient client = HttpClients.createDefault();
+    int resopnseCode;
+
     try {
-      // Create SOAP Connection
-      SOAPConnectionFactory soapConnectionFactory = SOAPConnectionFactory.newInstance();
-      SOAPConnection soapConnection = soapConnectionFactory.createConnection();
+      HttpPost httpPost = new HttpPost(JOB_SVC_URL + TM_RESPONSE_ENDPOINT);
 
-      // Send SOAP Message to SOAP Server
-      SOAPMessage soapResponse = soapConnection.call(createSOAPRequest(soapAction), soapEndpointUrl);
+      httpPost.setEntity(new StringEntity(data));
+      UsernamePasswordCredentials creds
+          = new UsernamePasswordCredentials(BASIC_AUTH_USER, BASIC_AUTH_PASSWORD);
+      httpPost.addHeader(new BasicScheme().authenticate(creds, httpPost, null));
+      httpPost.addHeader("Content-type", "text/xml");
 
-      // Print the SOAP Response
-      System.out.println("Response SOAP Message:");
-      soapResponse.writeTo(System.out);
-      System.out.println();
-
-      soapConnection.close();
-    } catch (Exception e) {
-      System.err.println("\nError occurred while sending SOAP Request to Server!\nMake sure you have the correct endpoint URL and SOAPAction!\n");
-      e.printStackTrace();
+      CloseableHttpResponse response = client.execute(httpPost);
+      resopnseCode = response.getStatusLine().getStatusCode();
+    } finally {
+      client.close();
     }
+
+    return resopnseCode;
   }
 
-  private static SOAPMessage createSOAPRequest(String soapAction) throws Exception {
-    MessageFactory messageFactory = MessageFactory.newInstance();
-    SOAPMessage soapMessage = messageFactory.createMessage();
-
-    createSoapEnvelope(soapMessage);
-
-    MimeHeaders headers = soapMessage.getMimeHeaders();
-    headers.addHeader("SOAPAction", soapAction);
-
-    soapMessage.saveChanges();
-
-    /* Print the request message, just for debugging purposes */
-    System.out.println("Request SOAP Message:");
-    soapMessage.writeTo(System.out);
-    System.out.println("\n");
-
-    return soapMessage;
+  public int getMessageCount() {
+    return messageCount;
   }
 
-  private static void createSoapEnvelope(SOAPMessage soapMessage) throws SOAPException {
-    SOAPPart soapPart = soapMessage.getSOAPPart();
+  public String getMessage() throws InterruptedException {
 
-    String myNamespace = "myNamespace";
-    String myNamespaceURI = "http://www.webserviceX.NET";
-
-    // SOAP Envelope
-    SOAPEnvelope envelope = soapPart.getEnvelope();
-    envelope.addNamespaceDeclaration(myNamespace, myNamespaceURI);
-
-            /*
-            Constructed SOAP Request Message:
-            <SOAP-ENV:Envelope xmlns:SOAP-ENV="http://schemas.xmlsoap.org/soap/envelope/" xmlns:myNamespace="http://www.webserviceX.NET">
-                <SOAP-ENV:Header/>
-                <SOAP-ENV:Body>
-                    <myNamespace:GetInfoByCity>
-                        <myNamespace:USCity>New York</myNamespace:USCity>
-                    </myNamespace:GetInfoByCity>
-                </SOAP-ENV:Body>
-            </SOAP-ENV:Envelope>
-            */
-
-    // SOAP Body
-    SOAPBody soapBody = envelope.getBody();
-    SOAPElement soapBodyElem = soapBody.addChildElement("GetInfoByCity", myNamespace);
-    SOAPElement soapBodyElem1 = soapBodyElem.addChildElement("USCity", myNamespace);
-    soapBodyElem1.addTextNode("New York");
+    for(int i=0;i<10;i++) {
+      if(message != null) {
+        break;
+      }
+      Thread.sleep(500);
+    }
+    return message;
   }
 }
