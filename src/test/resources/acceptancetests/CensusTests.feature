@@ -1,5 +1,6 @@
 Feature: Census Tests
 
+  @Census @Acceptance
   Scenario: As a system (FWMT Gateway) I can receive final outcome of cases from TM
     Given TM sends a Census case outcome to the Job Service
     And the response is an Census job
