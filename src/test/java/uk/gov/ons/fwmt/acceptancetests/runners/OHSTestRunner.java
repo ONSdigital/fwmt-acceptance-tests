@@ -7,6 +7,6 @@ import org.junit.runner.RunWith;
 @RunWith(Cucumber.class)
 @CucumberOptions(plugin = {"pretty","json:build/cucumber-report.json"},
     features = {"src/test/resources/acceptancetests/OHSTests.feature"},
-    glue = {"uk.gov.ons.fwmt.acceptancetests.steps"})
+    glue = {"uk.gov.ons.fwmt.acceptancetests.steps/OHS"})
 public class OHSTestRunner {
 }

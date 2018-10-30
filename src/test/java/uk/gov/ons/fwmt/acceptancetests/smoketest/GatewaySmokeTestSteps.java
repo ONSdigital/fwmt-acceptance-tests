@@ -15,35 +15,14 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.client.RestTemplate;
 
+import  uk.gov.ons.fwmt.acceptancetests.utils.Config;
 
 public class GatewaySmokeTestSteps {
-
-  static final String RMA_URL = System.getenv("RMA_URL");
-  static final String RMA_RABBIT_URL = System.getenv("RMA_RABBIT_URL");
-
-  static final String JS_USERNAME = System.getenv("JS_USERNAME");
-  static final String JS_PASSWORD = System.getenv("JS_PASSWORD");
-  static final String JS_URL = System.getenv("JS_URL");
-  static final String JS_RABBIT_URL =  System.getenv("JS_RABBIT_URL");
-
-  static final String TM_USERNAME = System.getenv("TM_USERNAME");
-  static final String TM_PASSWORD = System.getenv("TM_PASSWORD");
-  static final String TM_URL = System.getenv("TM_URL");
-
-
-
-
-static final String username = System.getenv("RABBIT_USER");
-  static final String password = System.getenv("RABBIT_PASSWORD");
-  static final String hostname = System.getenv("RABBIT_HOSTNAME");
-  static final String port = System.getenv("RABBIT_PORT");
-
-  static final String virtualHost = "/";
 
   @Given("^Check RmAdpater is running$")
   public void checkAdpaterRunning() throws Exception {
 
-    final String uri = RMA_URL;
+    final String uri = Config.RMA_URL;
 
     RestTemplate restTemplate = new RestTemplate();
     String result = restTemplate.getForObject(uri, String.class);
@@ -54,7 +33,7 @@ static final String username = System.getenv("RABBIT_USER");
   @Given("^Check Job Service is running$")
   public void checkJobserviceRunning() throws Exception {
 
-    final String plainCreds = JS_USERNAME+":"+JS_PASSWORD;
+    final String plainCreds = Config.JS_USERNAME+":"+Config.JS_PASSWORD;
     byte[] plainCredsBytes = plainCreds.getBytes();
     byte[] base64CredsBytes = Base64.encodeBase64(plainCredsBytes);
     String base64Creds = new String(base64CredsBytes);
@@ -62,7 +41,7 @@ static final String username = System.getenv("RABBIT_USER");
     HttpHeaders headers = new HttpHeaders();
     headers.add("Authorization", "Basic " + base64Creds);
 
-    final String url = JS_URL;
+    final String url = Config.JS_URL;
     RestTemplate restTemplate = new RestTemplate();
 
     HttpEntity<String> request = new HttpEntity<String>(headers);
@@ -75,7 +54,7 @@ static final String username = System.getenv("RABBIT_USER");
 
   @Given("^Check RM Rabbit is running$")
   public void checkRMRabbitRunning() throws Exception {
-    final String uri = RMA_RABBIT_URL;
+    final String uri = Config.RMA_RABBIT_URL;
 
     RestTemplate restTemplate = new RestTemplate();
     String result = restTemplate.getForObject(uri, String.class);
@@ -88,7 +67,7 @@ static final String username = System.getenv("RABBIT_USER");
   public void checkRabbitRunning() throws Exception {
 
 
-    final String plainCreds = JS_USERNAME+":"+JS_PASSWORD;
+    final String plainCreds = Config.JS_USERNAME+":"+Config.JS_PASSWORD;
     byte[] plainCredsBytes = plainCreds.getBytes();
     byte[] base64CredsBytes = Base64.encodeBase64(plainCredsBytes);
     String base64Creds = new String(base64CredsBytes);
@@ -96,28 +75,28 @@ static final String username = System.getenv("RABBIT_USER");
     HttpHeaders headers = new HttpHeaders();
     headers.add("Authorization", "Basic " + base64Creds);
 
-    final String url = JS_RABBIT_URL;
+    final String url = Config.JS_RABBIT_URL;
     RestTemplate restTemplate = new RestTemplate();
 
     HttpEntity<String> request = new HttpEntity<String>(headers);
     ResponseEntity<String> response = restTemplate.exchange(url, HttpMethod.GET, request, String.class);
     String result = response.getBody();
 
-    Assert.assertEquals("[\"rm-adapter\",\"jobsvc-adapter\",\"adapter-jobSvc\",\"adapter-rm\"]",result);
+    Assert.assertEquals("[\"jobsvc-adapter\",\"adapter-jobSvc\",\"adapter-rm\"]",result);
 
   }
 
   @Given("^Check Tmoblie is running$")
   public void checkTmobileRunning() throws Exception {
 
-    final String plainCreds = TM_USERNAME + ":" + TM_PASSWORD;
+    final String plainCreds = Config.TM_USERNAME + ":" + Config.TM_PASSWORD;
     byte[] plainCredsBytes = plainCreds.getBytes();
     byte[] base64CredsBytes = Base64.encodeBase64(plainCredsBytes);
     String base64Creds = new String(base64CredsBytes);
 
     HttpHeaders headers = new HttpHeaders();
     headers.add("Authorization", "Basic " + base64Creds);
-    final String url = TM_URL;
+    final String url = Config.TM_URL;
     RestTemplate restTemplate = new RestTemplate();
     HttpEntity<String> request = new HttpEntity<String>(headers);
     ResponseEntity<String> response = restTemplate.exchange(url, HttpMethod.GET, request, String.class);
