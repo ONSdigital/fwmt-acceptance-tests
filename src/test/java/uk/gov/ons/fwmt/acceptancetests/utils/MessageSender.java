@@ -32,7 +32,6 @@ public class MessageSender {
   private final String USER_AGENT = "Mozilla/5.0";
 
   private static String message;
-
   private static int messageCount;
 
   public MessageSender() throws IOException, TimeoutException {

@@ -14,9 +14,8 @@ public class CommonSteps {
 
   MessageSender ms;
 
-  public static final String LMS_RESPONSE = "<?xml version=\"1.0\" encoding=\"utf-8\"?><soap:Envelope xmlns:soap=\"http://schemas.xmlsoap.org/soap/envelope/\" xmlns:xsd=\"http://www.w3.org/2001/XMLSchema\" xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\"><soap:Body><request xmlns=\"http://schemas.consiliumtechnologies.com/services/mobile/2009/03/messaging\"><Id>IDENTITY</Id><Content>&lt;![CDATA[&lt;?xml version=\"1.0\" encoding=\"UTF-8\"?&gt;&lt;element xmlns:ns1=\"http://ons.gov.uk/fwmt/NonContactDetail\" xmlns:ns2=\"http://ons.gov.uk/fwmt/PropertyDetails\" xmlns:ns3=\"http://ons.gov.uk/fwmt/AdditionalProperties\" xmlns:ns7=\"http://schemas.consiliumtechnologies.com/mobile/2009/07/FormsTypes.xsd\" xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" xsi:noNamespaceSchemaLocation=\"\"&gt;&lt;eventDate&gt;2018-10-12T16:41:42.22&lt;/eventDate&gt;&lt;jobIdentity&gt;IDENTITY&lt;/jobIdentity&gt;&lt;nonContactDetail/&gt;&lt;propertyDetails&gt;&lt;description&gt;No physical impediments or barriers&lt;/description&gt;&lt;/propertyDetails&gt;&lt;username&gt;USER&lt;/username&gt;&lt;additionalProperties&gt;&lt;name&gt;CaseId&lt;/name&gt;&lt;/additionalProperties&gt;&lt;/element&gt;]]&gt;</Content><Format>fwmtOHSJobStatusNotification</Format></request></soap:Body></soap:Envelope>";
-  private static final String EXPECTED_XML ="<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"yes\"?><ns2:FwmtOHSJobStatusNotification xmlns:ns2=\"http://ons.gov.uk/fwmt/FwmtOHSJobStatusNotification\"><eventDate>2018-10-12T15:41:42.220Z</eventDate><jobIdentity>IDENTITY</jobIdentity><nonContactDetail/><propertyDetails><description>No physical impediments or barriers</description></propertyDetails><username>USER</username><additionalProperties><name>CaseId</name></additionalProperties></ns2:FwmtOHSJobStatusNotification>";
-
+  public static final String LMS_RESPONSE= "";
+  private static final String EXPECTED_XML = "";
   public CommonSteps() throws IOException, TimeoutException {
     ms =  new MessageSender();
   }
@@ -38,8 +37,9 @@ public class CommonSteps {
 
   @Given("^the response contains the outcome and caseId$")
   public void the_response_contains_the_outcome_and_caseId() throws Exception {
-    assertTrue(LMS_RESPONSE.contains("CaseId&lt;/name"));
-    //assertTrue(LMS_RESPONSE.contains("OUTCOME"));
+    assertTrue(LMS_RESPONSE.contains("&lt;name&gt;caseId&lt;/name&gt;&lt;value&gt;df670a12-1c5e-4530-b863-3ffc64d9159f&lt;/value&gt;"));
+    assertTrue(LMS_RESPONSE.contains("&lt;outcomeCategory&gt;Will complete&lt;/outcomeCategory&gt;"));
+    assertTrue(LMS_RESPONSE.contains("&lt;outcomeReason&gt;Will complete&lt;/outcomeReason&gt;"));
   }
 
   @Then("^the message is in the RM composite format$")
