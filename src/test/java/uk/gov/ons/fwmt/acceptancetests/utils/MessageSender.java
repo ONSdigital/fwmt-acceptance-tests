@@ -7,7 +7,6 @@ import com.rabbitmq.client.ConnectionFactory;
 import com.rabbitmq.client.Consumer;
 import com.rabbitmq.client.DefaultConsumer;
 import com.rabbitmq.client.Envelope;
-import lombok.NoArgsConstructor;
 import org.apache.http.auth.AuthenticationException;
 import org.apache.http.auth.UsernamePasswordCredentials;
 import org.apache.http.client.methods.CloseableHttpResponse;
@@ -18,6 +17,7 @@ import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.HttpClients;
 
 import java.io.IOException;
+import java.nio.charset.StandardCharsets;
 import java.util.concurrent.TimeoutException;
 
 import static uk.gov.ons.fwmt.acceptancetests.utils.Config.BASIC_AUTH_PASSWORD;
@@ -46,7 +46,7 @@ public class MessageSender {
       public void handleDelivery(String consumerTag, Envelope envelope,
           AMQP.BasicProperties properties, byte[] body)
           throws IOException {
-        message = new String(body, "UTF-8");
+        message = new String(body, StandardCharsets.UTF_8);
         messageCount++;
       }
     };

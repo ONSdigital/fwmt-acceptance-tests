@@ -1,26 +1,20 @@
 package uk.gov.ons.fwmt.acceptancetests.smoketest;
 
-import com.rabbitmq.client.Channel;
-import com.rabbitmq.client.Connection;
-import com.rabbitmq.client.ConnectionFactory;
 import cucumber.api.java.en.Given;
 import org.apache.commons.codec.binary.Base64;
 import org.junit.Assert;
-import org.springframework.amqp.rabbit.connection.CachingConnectionFactory;
-import org.springframework.amqp.rabbit.core.RabbitAdmin;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.client.RestTemplate;
-
-import  uk.gov.ons.fwmt.acceptancetests.utils.Config;
+import uk.gov.ons.fwmt.acceptancetests.utils.Config;
 
 public class GatewaySmokeTestSteps {
 
   @Given("^Check RmAdpater is running$")
-  public void checkAdpaterRunning() throws Exception {
+  public void checkAdpaterRunning() {
 
     final String uri = Config.RMA_URL;
 
@@ -31,7 +25,7 @@ public class GatewaySmokeTestSteps {
   }
 
   @Given("^Check Job Service is running$")
-  public void checkJobserviceRunning() throws Exception {
+  public void checkJobserviceRunning() {
 
     final String plainCreds = Config.JS_USERNAME+":"+Config.JS_PASSWORD;
     byte[] plainCredsBytes = plainCreds.getBytes();
@@ -53,7 +47,7 @@ public class GatewaySmokeTestSteps {
 
 
   @Given("^Check RM Rabbit is running$")
-  public void checkRMRabbitRunning() throws Exception {
+  public void checkRMRabbitRunning() {
     final String uri = Config.RMA_RABBIT_URL;
 
     RestTemplate restTemplate = new RestTemplate();
@@ -64,7 +58,7 @@ public class GatewaySmokeTestSteps {
   }
 
   @Given("^Check Rabbit is running$")
-  public void checkRabbitRunning() throws Exception {
+  public void checkRabbitRunning() {
 
 
     final String plainCreds = Config.JS_USERNAME+":"+Config.JS_PASSWORD;
@@ -87,7 +81,7 @@ public class GatewaySmokeTestSteps {
   }
 
   @Given("^Check Tmoblie is running$")
-  public void checkTmobileRunning() throws Exception {
+  public void checkTmobileRunning() {
 
     final String plainCreds = Config.TM_USERNAME + ":" + Config.TM_PASSWORD;
     byte[] plainCredsBytes = plainCreds.getBytes();
