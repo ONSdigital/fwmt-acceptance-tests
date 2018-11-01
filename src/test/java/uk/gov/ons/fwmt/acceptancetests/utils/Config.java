@@ -10,21 +10,7 @@ public class Config {
 
   public static final String BASIC_AUTH_PASSWORD = System.getenv("BASIC_AUTH_PASSWORD");
 
-  public static final String MOCK_URL = System.getenv("MOCK_URL");
-
-  //Smoke Tests
-  public static final String RMA_URL = System.getenv("RMA_URL");
-
-  public static final String RMA_RABBIT_URL = System.getenv("RMA_RABBIT_URL");
-
-  public static final String JS_USERNAME = System.getenv("JS_USERNAME");
-
-  public static final String JS_PASSWORD = System.getenv("JS_PASSWORD");
-
-  public static final String JS_URL = System.getenv("JS_URL");
-
-  public static final String JS_RABBIT_URL =  System.getenv("JS_RABBIT_URL");
-
+  //TM Credentials
   public static final String TM_USERNAME = System.getenv("TM_USERNAME");
 
   public static final String TM_PASSWORD = System.getenv("TM_PASSWORD");
