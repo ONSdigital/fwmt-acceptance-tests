@@ -42,7 +42,7 @@ public class OHSSteps {
 
   @Before
   public void resetMock() throws IOException, TimeoutException {
-    URL url = new URL(MOCK_URL +"logger/reset");
+    URL url = new URL(MOCK_URL +"/logger/reset");
     log.info("rest-mock_url:" + url.toString());
     HttpURLConnection httpURLConnection = (HttpURLConnection) url.openConnection();
     httpURLConnection.setRequestMethod("GET");
