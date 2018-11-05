@@ -45,7 +45,7 @@ public class OHSSteps {
     URL url = new URL(MOCK_URL +"logger/reset");
     HttpURLConnection httpURLConnection = (HttpURLConnection) url.openConnection();
     httpURLConnection.setRequestMethod("GET");
-    //checkConnection(httpURLConnection);
+    checkConnection(httpURLConnection);
     ms = new MessageSender();
   }
 
