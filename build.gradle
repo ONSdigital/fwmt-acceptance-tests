@@ -55,7 +55,6 @@ dependencies {
 	compile group: 'org.json', name: 'json', version: '20180130'
 	compile group: 'org.apache.httpcomponents', name: 'httpclient', version: '4.5.6'
 
-  testCompile group: 'com.rabbitmq', name: 'amqp-client', version: '5.4.2'
 	testCompile 'io.cucumber:cucumber-java:4.0.2'
 	testCompile 'io.cucumber:cucumber-junit:4.0.2'
 }
