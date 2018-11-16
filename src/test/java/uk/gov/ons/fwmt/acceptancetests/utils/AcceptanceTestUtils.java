@@ -26,8 +26,6 @@ public final class AcceptanceTestUtils {
   private RestTemplate restTemplate = new RestTemplate();
 
   public void clearQueues() throws URISyntaxException{
-    clearQueue("Action.Field");
-    clearQueue("Action.FieldDLQ");
     clearQueue("adapter-jobSvc");
     clearQueue("adapter-jobSvc");
     clearQueue("adapter-jobSvc.DLQ");
@@ -36,10 +34,12 @@ public final class AcceptanceTestUtils {
     clearQueue("jobsvc-adapter");
     clearQueue("jobSvc-adapter.DLQ");
     clearQueue("rm-adapter.DLQ");
+    clearQueue("Action.Field");
+    clearQueue("Action.FieldDLQ");
   }
 
   public void clearQueue(String queueName) throws URISyntaxException{
-    URI uri = new URI(mockTmURL+"/queue/delete?qname="+ queueName);
+    URI uri = new URI(mockTmURL+"/queue/?qname="+ queueName);
     restTemplate.delete(uri);
   }
   
