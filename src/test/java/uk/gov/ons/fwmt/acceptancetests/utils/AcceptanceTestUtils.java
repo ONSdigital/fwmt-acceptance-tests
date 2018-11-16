@@ -39,7 +39,7 @@ public final class AcceptanceTestUtils {
   }
 
   public void clearQueue(String queueName) throws URISyntaxException{
-    URI uri = new URI(mockTmURL+"/queue/?qname="+ queueName);
+    URI uri = new URI(mockTmURL+"/queue/delete?qname="+ queueName);
     restTemplate.delete(uri);
   }
   
