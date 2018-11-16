@@ -34,8 +34,8 @@ public final class AcceptanceTestUtils {
     clearQueue("jobsvc-adapter");
     clearQueue("jobSvc-adapter.DLQ");
     clearQueue("rm-adapter.DLQ");
-    clearQueue("Action.Field");
-    clearQueue("Action.FieldDLQ");
+//    clearQueue("Action.Field");
+//    clearQueue("Action.FieldDLQ");
   }
 
   public void clearQueue(String queueName) throws URISyntaxException{
