@@ -90,8 +90,10 @@ public class OHSSteps {
   }
 
   private void sendToQueue(int noOfJobs, String message) throws URISyntaxException{
-    String EXCHANGE_NAME = "action-outbound-exchange";
-    String ROUTING_KEY = "Action.Field.binding";
+//    String EXCHANGE_NAME = "action-outbound-exchange";
+//    String ROUTING_KEY = "Action.Field.binding";
+    String EXCHANGE_NAME = "";
+    String ROUTING_KEY = "Action.Field";
     RestTemplate rt = new RestTemplate();
     HttpEntity<String> httpEntity = new HttpEntity<String>(message);
     for (int i = 0; i < noOfJobs; i++) {
