@@ -16,4 +16,4 @@ Feature: OHS Tests
     Examples:
       | type     | jobs |
       | "create" | 10   |
-      | "delete" | 10   |
+      | "cancel" | 10   |
