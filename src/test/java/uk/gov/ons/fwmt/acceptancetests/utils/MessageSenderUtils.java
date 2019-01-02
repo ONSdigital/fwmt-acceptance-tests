@@ -1,9 +1,6 @@
 package uk.gov.ons.fwmt.acceptancetests.utils;
 
-import static uk.gov.ons.fwmt.fwmtgatewaycommon.config.QueueNames.ADAPTER_TO_RM_QUEUE;
-
-import java.io.IOException;
-
+import lombok.extern.slf4j.Slf4j;
 import org.apache.http.auth.AuthenticationException;
 import org.apache.http.auth.UsernamePasswordCredentials;
 import org.apache.http.client.methods.CloseableHttpResponse;
@@ -17,47 +14,45 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Component;
 import org.springframework.web.client.RestTemplate;
 
-import lombok.extern.slf4j.Slf4j;
+import java.io.IOException;
+
+import static uk.gov.ons.fwmt.fwmtgatewaycommon.config.QueueNames.ADAPTER_TO_RM_QUEUE;
 
 @Slf4j
 @Component
-public class MessageSenderUtils{
+public class MessageSenderUtils {
 
   @Value("${service.jobservice.username}")
-  private String jobserviceUsername;
-  
+  private String jobServiceUsername;
+
   @Value("${service.jobservice.password}")
-  private String jobservicePassword;
-  
+  private String jobServicePassword;
+
   @Value("${service.jobservice.url}")
-  private String jobSvcURL;
-  
+  private String jobServiceURL;
+
   @Value("${service.tmresponse.url}")
   private String tmResponseEndpoint;
-  
+
   @Value("${service.mocktm.url}")
   private String mockTmURL;
 
   public int sendTMResponseMessage(String data) throws IOException, AuthenticationException {
-    CloseableHttpClient client = HttpClients.createDefault();
-    int resopnseCode;
+    int responseCode;
 
-    try {
-      HttpPost httpPost = new HttpPost(jobSvcURL + tmResponseEndpoint);
+    try (CloseableHttpClient client = HttpClients.createDefault()) {
+      HttpPost httpPost = new HttpPost(jobServiceURL + tmResponseEndpoint);
 
       httpPost.setEntity(new StringEntity(data));
-      UsernamePasswordCredentials creds
-          = new UsernamePasswordCredentials(jobserviceUsername, jobservicePassword);
+      UsernamePasswordCredentials creds = new UsernamePasswordCredentials(jobServiceUsername, jobServicePassword);
       httpPost.addHeader(new BasicScheme().authenticate(creds, httpPost, null));
       httpPost.addHeader("Content-type", "text/xml");
 
       CloseableHttpResponse response = client.execute(httpPost);
-      resopnseCode = response.getStatusLine().getStatusCode();
-    } finally {
-      client.close();
+      responseCode = response.getStatusLine().getStatusCode();
     }
 
-    return resopnseCode;
+    return responseCode;
   }
 
   public long getMessageCount() {
@@ -71,11 +66,11 @@ public class MessageSenderUtils{
     RestTemplate restTemplate = new RestTemplate();
     String messageUrl = mockTmURL + "/queue/message/?qname=" + ADAPTER_TO_RM_QUEUE;
     String message = null;
-    for(int i=0;i<10;i++) {
+    for (int i = 0; i < 10; i++) {
       ResponseEntity<String> messageEntity = restTemplate.getForEntity(messageUrl, String.class);
       message = messageEntity.getBody();
-      
-      if(message != null) {
+
+      if (message != null) {
         break;
       }
       Thread.sleep(500);
