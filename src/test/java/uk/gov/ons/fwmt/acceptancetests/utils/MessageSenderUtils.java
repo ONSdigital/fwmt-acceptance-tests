@@ -57,7 +57,7 @@ public class MessageSenderUtils {
 
   public long getMessageCount() {
     RestTemplate restTemplate = new RestTemplate();
-    String messageCountUrl = mockTmURL + "/queue/count/" + ADAPTER_TO_RM_QUEUE;
+    String messageCountUrl = mockTmURL + "/queue/count/?qname=" + ADAPTER_TO_RM_QUEUE;
     ResponseEntity<Long> messageCount = restTemplate.getForEntity(messageCountUrl, Long.class);
     return messageCount.getBody();
   }
